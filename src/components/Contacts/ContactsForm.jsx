@@ -1,18 +1,36 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { Formik, Field } from 'formik';
 import { FormBox } from './ContactsForm.styled';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from 'redux/contactsSlice';
+import {getContacts} from '../../redux/selectors'
 const initialValues = {
   name: '',
   number: '',
 };
 
-export const ContactsForm = ({ handleSubmit }) => {
+export const ContactsForm = () => {
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+
+
   const onSubmit = (value, { resetForm }) => {
     handleSubmit(value);
 
     resetForm();
+  };
+
+  const handleSubmit = ({ name, number }) => {
+    const isInContacts = contacts.some(contact => {
+      return contact.name.toLowerCase() === name.toLowerCase();
+    });
+
+    if (isInContacts) {
+      alert(`${name} is already in contacts.`);
+      return;
+    }
+    dispatch(addContact(name, number));
   };
 
   return (
@@ -44,6 +62,6 @@ export const ContactsForm = ({ handleSubmit }) => {
   );
 };
 
-ContactsForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-};
+// ContactsForm.propTypes = {
+//   handleSubmit: PropTypes.func.isRequired,
+// };
