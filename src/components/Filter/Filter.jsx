@@ -1,28 +1,26 @@
-// import React from 'react';
-// import PropTypes from 'prop-types';
-// import { Formik, Field } from 'formik';
-// import { FilterLabel } from './Filter.styled';
+import React from 'react';
+import { Formik, Field } from 'formik';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFilterValue } from 'redux/filterSlice';
+import { getFilter } from 'redux/selectors';
+import { FilterLabel } from './Filter.styled';
 
-// const initialValues = {
-//   filter: '',
-// };
+const initialValues = '';
 
-// export const Filter = ({ onFilterChange, value }) => {
-//   function onChange(event) {
-//     const filterInput = event.target.value;
-//     onFilterChange(filterInput);
-//   }
-//   return (
-//     <Formik initialValues={initialValues}>
-//       <FilterLabel>
-//         Find contacts by name
-//         <Field type="text" name="filter" value={value} onChange={onChange} />
-//       </FilterLabel>
-//     </Formik>
-//   );
-// };
+export const Filter = () => {
+  const dispatch = useDispatch();
+  const value = useSelector(getFilter);
 
-// Filter.propTypes = {
-//   onFilterChange: PropTypes.func.isRequired,
-//   value: PropTypes.string.isRequired,
-// };
+  function onChange(event) {
+    const filterInput = event.target.value;
+    dispatch(setFilterValue(filterInput));
+  }
+  return (
+    <Formik initialValues={initialValues}>
+      <FilterLabel>
+        Find contacts by name
+        <Field type="text" name="filter" value={value} onChange={onChange} />
+      </FilterLabel>
+    </Formik>
+  );
+};
